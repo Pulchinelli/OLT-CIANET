@@ -112,7 +112,7 @@ Desenvolvido a partir de `snmpwalk` real em OLT de produção — Enterprise OID
    - **Groups:** `OLTs Cianet` (ou o grupo do seu ambiente)
    - **Templates:** `Cianet OLT G8PS X by SNMP`
 3. Na aba **Interfaces**, adicione interface SNMP:
-   - **IP:** IP de gerência da OLT (ex.: `10.233.113.102`)
+   - **IP:** IP de gerência da OLT (ex.: `192.168.1.100`)
    - **Port:** `161`
    - **SNMP version:** `SNMPv2`
    - **Community:** `{$SNMP_COMMUNITY}`
@@ -124,7 +124,7 @@ Desenvolvido a partir de `snmpwalk` real em OLT de produção — Enterprise OID
 
 | Macro | Padrão | Descrição |
 |---|---|---|
-| `{$SNMP_COMMUNITY}` | `@Flyconecta-lan` | Comunidade SNMP da OLT |
+| `{$SNMP_COMMUNITY}` | `@read-write-community` | Comunidade SNMP da OLT |
 | `{$SNMP.TIMEOUT}` | `5m` | Timeout de indisponibilidade SNMP |
 | `{$ICMP_LOSS_WARN}` | `20` | Limite de perda ICMP (%) |
 | `{$ICMP_RESPONSE_TIME_WARN}` | `0.15` | Limite de latência ICMP (s) |
