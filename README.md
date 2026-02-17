@@ -197,6 +197,5 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 
 ## 🙏 Créditos
 
-- Desenvolvido por **Flyconecta** — Provedor de Internet Regional
+- Desenvolvido por **Rafael S. Pulchinelli** — Analista de Redes
 - Baseado em dados reais de produção (snmpwalk completo na Enterprise MIB 17409)
-- Template gerado com auxílio de análise automatizada de OIDs hexadecimais
