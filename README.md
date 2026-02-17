@@ -108,7 +108,7 @@ Desenvolvido a partir de `snmpwalk` real em OLT de produção — Enterprise OID
 
 1. **Data collection → Hosts → Create host**
 2. Preencha:
-   - **Host name:** `OLT-CIANET-STACRUZ` (ou o nome desejado)
+   - **Host name:** `OLT-CIANET` (ou o nome desejado)
    - **Groups:** `OLTs Cianet` (ou o grupo do seu ambiente)
    - **Templates:** `Cianet OLT G8PS X by SNMP`
 3. Na aba **Interfaces**, adicione interface SNMP:
