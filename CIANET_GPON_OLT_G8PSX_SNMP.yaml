@@ -1,0 +1,822 @@
+zabbix_export:
+  version: '7.0'
+  template_groups:
+    - uuid: e3a99eda430045f3b62206ad2ecf2ebe
+      name: Templates/Network devices
+  templates:
+    - uuid: 94712a8b2a6943e484dcd70f6e86f9b4
+      template: Cianet OLT G8PS X by SNMP
+      name: Cianet OLT G8PS X by SNMP
+      description: |-
+        Template para monitoramento da OLT Cianet G8PS X V2 via SNMP v2c.
+        Enterprise OID: 1.3.6.1.4.1.17409
+        Monitora: sistema, uplinks, portas PON, ONUs autorizadas/online, sinal optico, fontes, fans, VLANs e tabela MAC.
+        Criado com base em snmpwalk real de producao.
+        Por: Rafael Pulchinelli - PSR! Tech - Consultoria
+      groups:
+        - name: Templates/Network devices
+      items:
+        - uuid: 9bdabe94b9ae4b60a1a55b210d73b71a
+          name: System description
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.1.0
+          key: system.descr
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: sysDescr - Descricao do sistema (modelo da OLT).
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: system
+        - uuid: 998c3f4beef04b1fb003efbe03f44c0e
+          name: System name
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.5.0
+          key: system.name
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: sysName - Hostname da OLT.
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: system
+        - uuid: d5a0b9c678cf4533907f19de3e08b94d
+          name: System location
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.6.0
+          key: system.location
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: system
+        - uuid: 513d2820a5994b01984baf12675a0e05
+          name: System contact
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.4.0
+          key: system.contact
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: system
+        - uuid: 341c3afc9a2849e994e9e7767a235bef
+          name: System uptime
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.3.0
+          key: system.uptime
+          delay: 1m
+          history: 7d
+          trends: 365d
+          units: uptime
+          description: sysUpTime em centesimos de segundo.
+          preprocessing:
+            - type: MULTIPLIER
+              parameters:
+                - '0.01'
+          tags:
+            - tag: component
+              value: system
+          triggers:
+            - uuid: 2d9a306bd6134b158f9f4b5c01a777ed
+              expression: last(/Cianet OLT G8PS X by SNMP/system.uptime)<600
+              name: OLT reiniciada (uptime < 10m)
+              priority: WARNING
+              description: A OLT foi reiniciada recentemente.
+              manual_close: 'YES'
+              tags:
+                - tag: scope
+                  value: availability
+        - uuid: 93e3c56351db435fbb8bf9498d31bf4d
+          name: System object ID
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.2.1.1.2.0
+          key: system.objectid
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: system
+        - uuid: 06fd4c8ec8f448f9a613715aca46e983
+          name: OLT Hostname (Cianet)
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.17409.2.3.1.2.1.1.2.1
+          key: cianet.olt.hostname
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: Hostname configurado na OLT Cianet.
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: system
+        - uuid: c17b4ef5ef6049bfbbad540b18210bc1
+          name: OLT Model (Cianet)
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.17409.2.3.1.2.1.1.3.1
+          key: cianet.olt.model
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: Modelo do hardware da OLT.
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: system
+        - uuid: c1bcfbd402a0449084872dda6daf6d4a
+          name: OLT Serial Number
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.17409.2.3.1.1.13.0
+          key: cianet.olt.serial
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: Numero de serie da OLT.
+          inventory_link: SERIALNO_A
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: system
+        - uuid: 7c5ef0a3a6644f6388c5bc5f9fbcae90
+          name: OLT Firmware Version
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.17409.2.3.1.3.1.1.8.1.0
+          key: cianet.olt.firmware
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          description: Versao do firmware da OLT.
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: system
+          triggers:
+            - uuid: 13b647ffecd045cc9f7f2ad171647c44
+              expression: last(/Cianet OLT G8PS X by SNMP/cianet.olt.firmware,#1)<>last(/Cianet OLT G8PS X by SNMP/cianet.olt.firmware,#2) and length(last(/Cianet OLT G8PS X by SNMP/cianet.olt.firmware))>0
+              name: Firmware da OLT alterado
+              priority: INFO
+              manual_close: 'YES'
+              tags:
+                - tag: scope
+                  value: notice
+        - uuid: 9ff9c333fc384818ba20b1dcb64ed659
+          name: OLT Management IP
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.17409.2.3.1.1.2.0
+          key: cianet.olt.mgmt.ip
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: network
+        - uuid: afce859d6c0346a4a7a51887327efbd9
+          name: OLT MAC Address
+          type: SNMP_AGENT
+          snmp_oid: 1.3.6.1.4.1.17409.2.3.1.1.6.0
+          key: cianet.olt.mac
+          delay: 1h
+          history: 7d
+          trends: '0'
+          value_type: CHAR
+          preprocessing:
+            - type: DISCARD_UNCHANGED_HEARTBEAT
+              parameters:
+                - 6h
+          tags:
+            - tag: component
+              value: network
+        - uuid: 2993aaec7a734a3cb2bc0e3e00f8c7f6
+          name: SNMP agent availability
+          type: INTERNAL
+          key: zabbix[host,snmp,available]
+          delay: 1m
+          history: 7d
+          description: Disponibilidade do agente SNMP.
+          valuemap:
+            name: zabbix.host.available
+          tags:
+            - tag: component
+              value: health
+          triggers:
+            - uuid: 251472a56c7e4508a53f9acde969ccd4
+              expression: max(/Cianet OLT G8PS X by SNMP/zabbix[host,snmp,available],{$SNMP.TIMEOUT})=0
+              name: Sem coleta SNMP na OLT
+              priority: WARNING
+              description: SNMP indisponivel. Verificar conectividade e configuracao SNMP.
+              tags:
+                - tag: scope
+                  value: availability
+        - uuid: b3874e69e9304f0ca7bf84ac29a877d6
+          name: ICMP ping
+          type: SIMPLE
+          key: icmpping
+          delay: 1m
+          history: 7d
+          valuemap:
+            name: Service state
+          tags:
+            - tag: component
+              value: health
+          triggers:
+            - uuid: 98af3bf319114d4e90acb19a40bc3ade
+              expression: max(/Cianet OLT G8PS X by SNMP/icmpping,#3)=0
+              name: OLT inacessivel por ICMP
+              priority: HIGH
+              description: Ultimas 3 tentativas de ping falharam.
+              tags:
+                - tag: scope
+                  value: availability
+        - uuid: 42463fd513a544239525aa1e7b6b26fc
+          name: ICMP loss
+          type: SIMPLE
+          key: icmppingloss
+          delay: 1m
+          history: 7d
+          value_type: FLOAT
+          units: '%'
+          tags:
+            - tag: component
+              value: health
+          triggers:
+            - uuid: eb339d0ebc6e4bc691b892cef6d8a7ba
+              expression: min(/Cianet OLT G8PS X by SNMP/icmppingloss,5m)>{$ICMP_LOSS_WARN} and min(/Cianet OLT G8PS X by SNMP/icmppingloss,5m)<100
+              name: Alta perda de pacotes ICMP na OLT
+              priority: WARNING
+              tags:
+                - tag: scope
+                  value: availability
+        - uuid: 4e61460e310347ed94ec2fae85415ae2
+          name: ICMP response time
+          type: SIMPLE
+          key: icmppingsec
+          delay: 1m
+          history: 7d
+          value_type: FLOAT
+          units: s
+          tags:
+            - tag: component
+              value: health
+          triggers:
+            - uuid: ef3d21cc6caf4b339261592e5f20f582
+              expression: avg(/Cianet OLT G8PS X by SNMP/icmppingsec,5m)>{$ICMP_RESPONSE_TIME_WARN}
+              name: Alto tempo de resposta ICMP na OLT
+              priority: WARNING
+              tags:
+                - tag: scope
+                  value: performance
+      discovery_rules:
+        - uuid: 72e658883e7b465c828dc18a7faf33dc
+          name: Uplink interfaces discovery
+          type: SNMP_AGENT
+          snmp_oid: discovery[{#IFNAME},1.3.6.1.4.1.17409.2.3.2.1.1.4.1.0,{#IFINDEX},1.3.6.1.4.1.17409.2.3.2.1.1.3.1.0]
+          key: cianet.uplink.discovery
+          delay: 1h
+          description: Descobre interfaces uplink (ge e xge).
+          item_prototypes:
+            - uuid: dc06c9cc341e4155a04c6d96ab2510c8
+              name: 'Uplink {#IFNAME}: Operational status'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}
+              key: cianet.uplink.operstatus[{#IFNAME}]
+              delay: 1m
+              description: Status operacional da interface uplink.
+              valuemap:
+                name: ifOperStatus
+              tags:
+                - tag: component
+                  value: uplink
+                - tag: interface
+                  value: '{#IFNAME}'
+            - uuid: fb01db9d3a1a4bbab480a4fbc643f117
+              name: 'Uplink {#IFNAME}: Inbound traffic'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.2.1.2.2.1.10.{#SNMPINDEX}
+              key: cianet.uplink.in[{#IFNAME}]
+              delay: 1m
+              units: Bps
+              description: Trafego de entrada (ifInOctets).
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                - tag: component
+                  value: uplink
+                - tag: interface
+                  value: '{#IFNAME}'
+            - uuid: abb6949194d741cfbea09cdd409a6f79
+              name: 'Uplink {#IFNAME}: Outbound traffic'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.2.1.2.2.1.16.{#SNMPINDEX}
+              key: cianet.uplink.out[{#IFNAME}]
+              delay: 1m
+              units: Bps
+              description: Trafego de saida (ifOutOctets).
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                - tag: component
+                  value: uplink
+                - tag: interface
+                  value: '{#IFNAME}'
+            - uuid: a3f7c0d028b64054b316aa0beeb72eec
+              name: 'Uplink {#IFNAME}: Speed'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.2.1.2.2.1.5.{#SNMPINDEX}
+              key: cianet.uplink.speed[{#IFNAME}]
+              delay: 5m
+              units: bps
+              description: Velocidade da interface (ifSpeed).
+              preprocessing:
+                - type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
+              tags:
+                - tag: component
+                  value: uplink
+                - tag: interface
+                  value: '{#IFNAME}'
+          trigger_prototypes:
+            - uuid: 1dfaa80a489f42f289ba84386a657669
+              expression: last(/Cianet OLT G8PS X by SNMP/cianet.uplink.operstatus[{#IFNAME}])=2 and last(/Cianet OLT G8PS X by SNMP/cianet.uplink.operstatus[{#IFNAME}],#1)<>last(/Cianet OLT G8PS X by SNMP/cianet.uplink.operstatus[{#IFNAME}],#2)
+              name: 'Uplink {#IFNAME}: Link DOWN'
+              priority: AVERAGE
+              description: O link da interface uplink {#IFNAME} caiu.
+              manual_close: 'YES'
+              tags:
+                - tag: scope
+                  value: availability
+        - uuid: d1e7803791724e9c88e85faae14dab5d
+          name: PON port discovery
+          type: SNMP_AGENT
+          snmp_oid: discovery[{#PONNAME},1.3.6.1.4.1.17409.2.3.3.1.1.21.1.0,{#PONIDX},1.3.6.1.4.1.17409.2.3.3.1.1.3.1.0]
+          key: cianet.pon.discovery
+          delay: 1h
+          description: Descobre portas PON GPON da OLT.
+          item_prototypes:
+            - uuid: c948b3855ef743d295e74f2a636dbccc
+              name: 'PON {#PONNAME}: ONUs autorizadas'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.17409.2.3.3.1.1.8.1.0.{#SNMPINDEX}
+              key: cianet.pon.onus.authorized[{#PONNAME}]
+              delay: 1m
+              description: Quantidade de ONUs autorizadas/registradas nesta porta PON.
+              tags:
+                - tag: component
+                  value: pon
+                - tag: pon
+                  value: '{#PONNAME}'
+            - uuid: 806f7366d1b34f209bdcf2450b8d1c39
+              name: 'PON {#PONNAME}: Max ONUs'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.17409.2.3.3.1.1.7.1.0.{#SNMPINDEX}
+              key: cianet.pon.onus.max[{#PONNAME}]
+              delay: 1h
+              description: Maximo de ONUs suportadas nesta porta PON.
+              preprocessing:
+                - type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 6h
+              tags:
+                - tag: component
+                  value: pon
+                - tag: pon
+                  value: '{#PONNAME}'
+            - uuid: 64292cc5e91345e490cc7adde8f7c253
+              name: 'PON {#PONNAME}: Bandwidth total (kbps)'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.17409.2.3.3.1.1.18.1.0.{#SNMPINDEX}
+              key: cianet.pon.bw.total[{#PONNAME}]
+              delay: 5m
+              units: kbps
+              description: Bandwidth total disponivel na porta PON.
+              preprocessing:
+                - type: DISCARD_UNCHANGED_HEARTBEAT
+                  parameters:
+                    - 1h
+              tags:
+                - tag: component
+                  value: pon
+                - tag: pon
+                  value: '{#PONNAME}'
+            - uuid: bb0058ff858f4ea3aca218cd6b1c90fb
+              name: 'PON {#PONNAME}: Bandwidth alocado (kbps)'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.17409.2.3.3.1.1.19.1.0.{#SNMPINDEX}
+              key: cianet.pon.bw.allocated[{#PONNAME}]
+              delay: 1m
+              units: kbps
+              description: Bandwidth alocado para ONUs nesta porta PON.
+              tags:
+                - tag: component
+                  value: pon
+                - tag: pon
+                  value: '{#PONNAME}'
+            - uuid: 9f05af5a2646483aa9fbfe790d17b29f
+              name: 'PON {#PONNAME}: Bandwidth livre (kbps)'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.17409.2.3.3.1.1.20.1.0.{#SNMPINDEX}
+              key: cianet.pon.bw.free[{#PONNAME}]
+              delay: 1m
+              units: kbps
+              description: Bandwidth livre restante na porta PON.
+              tags:
+                - tag: component
+                  value: pon
+                - tag: pon
+                  value: '{#PONNAME}'
+            - uuid: ac546e4663ff42e095aa33c50a9773f0
+              name: 'PON {#PONNAME}: Operational status'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}
+              key: cianet.pon.operstatus[{#PONNAME}]
+              delay: 1m
+              description: Status operacional da porta PON (ifOperStatus).
+              valuemap:
+                name: ifOperStatus
+              tags:
+                - tag: component
+                  value: pon
+                - tag: pon
+                  value: '{#PONNAME}'
+            - uuid: a1eb92e418be4b53b9f8bb574f14bf1f
+              name: 'PON {#PONNAME}: SFP Temperature'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.17409.2.3.3.5.1.4.1.0.{#SNMPINDEX}
+              key: cianet.pon.sfp.temp[{#PONNAME}]
+              delay: 5m
+              value_type: FLOAT
+              units: °C
+              description: Temperatura do modulo SFP da porta PON (valor / 10000).
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.0001'
+              tags:
+                - tag: component
+                  value: optical
+                - tag: pon
+                  value: '{#PONNAME}'
+            - uuid: aa8a679c01d24ed3bb74abacdd441bc5
+              name: 'PON {#PONNAME}: SFP TX Power'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.17409.2.3.3.5.1.5.1.0.{#SNMPINDEX}
+              key: cianet.pon.sfp.txpower[{#PONNAME}]
+              delay: 5m
+              value_type: FLOAT
+              units: dBm
+              description: Potencia de transmissao TX do SFP da porta PON (valor / 100).
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.01'
+              tags:
+                - tag: component
+                  value: optical
+                - tag: pon
+                  value: '{#PONNAME}'
+            - uuid: 1c4d95a5a5c344648b15a32af86fe4db
+              name: 'PON {#PONNAME}: SFP Bias Current'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.17409.2.3.3.5.1.6.1.0.{#SNMPINDEX}
+              key: cianet.pon.sfp.bias[{#PONNAME}]
+              delay: 5m
+              value_type: FLOAT
+              units: mA
+              description: Corrente de bias do SFP da porta PON (valor / 10).
+              preprocessing:
+                - type: MULTIPLIER
+                  parameters:
+                    - '0.1'
+              tags:
+                - tag: component
+                  value: optical
+                - tag: pon
+                  value: '{#PONNAME}'
+            - uuid: 8caf5fe35b394b67bc18479cbcdb9da9
+              name: 'PON {#PONNAME}: Inbound traffic'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.2.1.2.2.1.10.{#SNMPINDEX}
+              key: cianet.pon.in[{#PONNAME}]
+              delay: 1m
+              units: bps
+              description: Trafego de entrada na porta PON (ifInOctets).
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                - tag: component
+                  value: pon
+                - tag: pon
+                  value: '{#PONNAME}'
+            - uuid: ca95e21a87f4488da5f95cf3a977ce82
+              name: 'PON {#PONNAME}: Outbound traffic'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.2.1.2.2.1.16.{#SNMPINDEX}
+              key: cianet.pon.out[{#PONNAME}]
+              delay: 1m
+              units: bps
+              description: Trafego de saida na porta PON (ifOutOctets).
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                - tag: component
+                  value: pon
+                - tag: pon
+                  value: '{#PONNAME}'
+          trigger_prototypes:
+            - uuid: 7aea2e86400d490eaf504ab28989b765
+              expression: last(/Cianet OLT G8PS X by SNMP/cianet.pon.operstatus[{#PONNAME}])=2 and last(/Cianet OLT G8PS X by SNMP/cianet.pon.onus.authorized[{#PONNAME}])>0
+              name: 'PON {#PONNAME}: Link DOWN (com ONUs autorizadas)'
+              priority: HIGH
+              description: A porta PON {#PONNAME} esta DOWN mas possui ONUs autorizadas.
+              manual_close: 'YES'
+              tags:
+                - tag: scope
+                  value: availability
+            - uuid: 4ee0c2b729294ad0b6788d1798e31374
+              expression: last(/Cianet OLT G8PS X by SNMP/cianet.pon.sfp.temp[{#PONNAME}])>{$PON.SFP.TEMP.MAX}
+              name: 'PON {#PONNAME}: Temperatura do SFP alta (>{$PON.SFP.TEMP.MAX}°C)'
+              priority: WARNING
+              description: A temperatura do SFP da porta PON {#PONNAME} excedeu o limite.
+              tags:
+                - tag: scope
+                  value: performance
+        - uuid: 1f3d8c0d677b4cedb685c4d1daccbf75
+          name: ONU interface discovery
+          type: SNMP_AGENT
+          snmp_oid: discovery[{#IFNAME},1.3.6.1.2.1.2.2.1.2,{#IFOPERSTATUS},1.3.6.1.2.1.2.2.1.8]
+          key: cianet.onu.discovery
+          delay: 1h
+          filter:
+            evaltype: AND
+            conditions:
+              - macro: '{#IFNAME}'
+                value: ^pon[0-9]+/[0-9]+/[0-9]+:[0-9]+$
+                formulaid: A
+          description: Descobre interfaces de ONU (pon0/0/X:Y) via ifTable.
+          item_prototypes:
+            - uuid: 0585cb2538784c79934c0fbf80390dee
+              name: 'ONU {#IFNAME}: Operational status'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.2.1.2.2.1.8.{#SNMPINDEX}
+              key: cianet.onu.operstatus[{#IFNAME}]
+              delay: 1m
+              description: Status operacional da ONU.
+              valuemap:
+                name: ifOperStatus
+              tags:
+                - tag: component
+                  value: onu
+                - tag: onu
+                  value: '{#IFNAME}'
+            - uuid: 61828ec79c7a4f04b291e34071311229
+              name: 'ONU {#IFNAME}: Inbound traffic'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.2.1.2.2.1.10.{#SNMPINDEX}
+              key: cianet.onu.in[{#IFNAME}]
+              delay: 1m
+              units: bps
+              description: Trafego de entrada da ONU (ifInOctets).
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                - tag: component
+                  value: onu
+                - tag: onu
+                  value: '{#IFNAME}'
+            - uuid: c0ceb8475d0c4052816a572de2dfe5dc
+              name: 'ONU {#IFNAME}: Outbound traffic'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.2.1.2.2.1.16.{#SNMPINDEX}
+              key: cianet.onu.out[{#IFNAME}]
+              delay: 1m
+              units: bps
+              description: Trafego de saida da ONU (ifOutOctets).
+              preprocessing:
+                - type: CHANGE_PER_SECOND
+                  parameters:
+                    - ''
+                - type: MULTIPLIER
+                  parameters:
+                    - '8'
+              tags:
+                - tag: component
+                  value: onu
+                - tag: onu
+                  value: '{#IFNAME}'
+          trigger_prototypes:
+            - uuid: 87da7deafbe94c078f8e0795a48c3a81
+              expression: last(/Cianet OLT G8PS X by SNMP/cianet.onu.operstatus[{#IFNAME}])=2
+              name: 'ONU {#IFNAME}: Offline'
+              priority: AVERAGE
+              description: A ONU {#IFNAME} esta offline.
+              manual_close: 'YES'
+              tags:
+                - tag: scope
+                  value: availability
+        - uuid: af94a859159649d2894a1ea986ddb6b3
+          name: Power supply discovery
+          type: SNMP_AGENT
+          snmp_oid: discovery[{#PSNAME},1.3.6.1.4.1.17409.2.3.1.4.1.1.6.1,{#PSIDX},1.3.6.1.4.1.17409.2.3.1.4.1.1.2.1]
+          key: cianet.psu.discovery
+          delay: 1h
+          description: Descobre fontes de alimentacao da OLT.
+          item_prototypes:
+            - uuid: a22ed41d7e934db0850880080485aa51
+              name: 'PSU {#PSNAME}: Status'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.17409.2.3.1.4.1.1.5.1.{#SNMPINDEX}
+              key: cianet.psu.status[{#PSNAME}]
+              delay: 1m
+              description: Status da fonte de alimentacao (1=normal).
+              valuemap:
+                name: Cianet PSU Status
+              tags:
+                - tag: component
+                  value: power
+          trigger_prototypes:
+            - uuid: b526058f9cc44efca242d262fb29e516
+              expression: last(/Cianet OLT G8PS X by SNMP/cianet.psu.status[{#PSNAME}])<>1
+              name: 'PSU {#PSNAME}: Falha na fonte'
+              priority: HIGH
+              description: A fonte de alimentacao {#PSNAME} esta com problema.
+              tags:
+                - tag: scope
+                  value: availability
+        - uuid: b067108b5740467993f0ce2253256127
+          name: Fan discovery
+          type: SNMP_AGENT
+          snmp_oid: discovery[{#FANNAME},1.3.6.1.4.1.17409.2.3.1.5.1.1.5.1,{#FANIDX},1.3.6.1.4.1.17409.2.3.1.5.1.1.2.1]
+          key: cianet.fan.discovery
+          delay: 1h
+          description: Descobre ventiladores (fans) da OLT.
+          item_prototypes:
+            - uuid: bde0d11f084a472e95e8aed43cbf66f1
+              name: 'Fan {#FANNAME} #{#SNMPINDEX}: Status'
+              type: SNMP_AGENT
+              snmp_oid: 1.3.6.1.4.1.17409.2.3.1.5.1.1.6.1.{#SNMPINDEX}
+              key: cianet.fan.status[{#SNMPINDEX}]
+              delay: 5m
+              description: Status do ventilador (1=normal).
+              valuemap:
+                name: Cianet Fan Status
+              tags:
+                - tag: component
+                  value: fan
+          trigger_prototypes:
+            - uuid: ad991a8b07df468b8450b8b853550054
+              expression: last(/Cianet OLT G8PS X by SNMP/cianet.fan.status[{#SNMPINDEX}])<>1
+              name: 'Fan {#FANNAME} #{#SNMPINDEX}: Falha no ventilador'
+              priority: AVERAGE
+              description: O ventilador esta com problema.
+              tags:
+                - tag: scope
+                  value: availability
+      macros:
+        - macro: '{$SNMP.TIMEOUT}'
+          value: 5m
+          description: Timeout para considerar SNMP indisponivel.
+        - macro: '{$ICMP_LOSS_WARN}'
+          value: '20'
+          description: Limite de perda ICMP (%) para alerta.
+        - macro: '{$ICMP_RESPONSE_TIME_WARN}'
+          value: '0.15'
+          description: Limite de tempo de resposta ICMP (s).
+        - macro: '{$PON.SFP.TEMP.MAX}'
+          value: '65'
+          description: Temperatura maxima do SFP PON (°C).
+        - macro: '{$SNMP_COMMUNITY}'
+          value: '@Flyconecta-lan'
+          description: Comunidade SNMP da OLT.
+      tags:
+        - tag: class
+          value: network
+        - tag: target
+          value: cianet-olt
+        - tag: vendor
+          value: cianet
+      valuemaps:
+        - uuid: 22077a57be6f4fbcbf4a257c55704dfd
+          name: ifOperStatus
+          mappings:
+            - value: '1'
+              newvalue: up
+            - value: '2'
+              newvalue: down
+            - value: '3'
+              newvalue: testing
+            - value: '4'
+              newvalue: unknown
+            - value: '5'
+              newvalue: dormant
+            - value: '6'
+              newvalue: notPresent
+            - value: '7'
+              newvalue: lowerLayerDown
+        - uuid: 6da92a30266c4578b7b189d444efff2c
+          name: zabbix.host.available
+          mappings:
+            - value: '0'
+              newvalue: not available
+            - value: '1'
+              newvalue: available
+            - value: '2'
+              newvalue: unknown
+        - uuid: 424242b917f04ee18f936d22ca59d620
+          name: Service state
+          mappings:
+            - value: '0'
+              newvalue: Down
+            - value: '1'
+              newvalue: Up
+        - uuid: bdb4548dfd0041c8835d140c7cabb20c
+          name: Cianet PSU Status
+          mappings:
+            - value: '1'
+              newvalue: Normal
+            - value: '2'
+              newvalue: Falha
+            - value: '3'
+              newvalue: Ausente
+        - uuid: 1ef2887b09914fef8fbbcb34eb60bf10
+          name: Cianet Fan Status
+          mappings:
+            - value: '1'
+              newvalue: Normal
+            - value: '2'
+              newvalue: Falha
+            - value: '3'
+              newvalue: Ausente
